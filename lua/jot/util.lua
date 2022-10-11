@@ -1,3 +1,5 @@
+local Link = require "jot.link"
+
 local util = {}
 
 -- Merge two arrays together 
@@ -69,7 +71,29 @@ end
 --@param line string
 --@return Array<jot.Link>
 util.get_links = function(line)
-  print("TODO: get links")
+  -- Find the bounds of the next substring matching the 
+  -- pattern: [[<text]]
+  local function get_link(text) 
+    return text:find("%[%[[^%]]+%]%]")
+  end
+
+  local links = {}
+  local rest_of_line = line
+
+  while true do
+    local left_bound, right_bound = get_link(rest_of_line)
+
+    if left_bound == nil then
+      break
+    end
+
+    local link_text = text:sub(left_bound + 2, right_bound + 2)
+    local link = Link.new(left_bound, right_bound, link_text, link_text) 
+
+    table.insert(links, link)
+
+    rest_of_line = rest_of_line:sub(right_bound)
+  end
 end
 
 -- Find the note link locationed at a given cursor position
@@ -84,7 +108,28 @@ end
 -- @param cursor_pos integer
 -- @return string
 util.parse_note_jump = function(text, cursor_pos)
-  print("TODO: parse note jump") 
+  local function get_link_under_cursor()
+    local links_on_line = util.get_links(text)
+
+    for i = 1, #links_on_line do
+      local link = links_on_line[i]
+
+      if link.left_bound <= cursor_pos and cursor_pos < link.right_bound then
+        return link
+      end
+    end
+
+    return nil
+  end
+
+  local link_under_cursor = get_link_under_cursor()
+
+  if link_under_cursor == nil then
+    -- Do nothing
+    return nil
+  end
+
+  -- Find the note with the given name
 end
 
 -- Get the text on the current line
@@ -97,3 +142,34 @@ end
 
 return util 
 
+-- function get_link(text) 
+--   l, r = text:find("%[%[[^%]]+%]%]")
+--
+--   return l, r
+-- end
+--
+-- function get_links(text)
+--   l, r = get_link
+--
+--   links = {}
+--
+--   while true do
+--     l, r = get_link(text)
+--     if l == nil then
+--       break
+--     end
+--
+--     link = text:sub(l, r)
+--     table.insert(links, link)
+--
+--     text = text:sub(r)
+--   end
+--
+--   return links
+-- end
+--
+-- links = get_links(text)
+--
+-- for i = 1, #links do
+--   print(links[i])
+-- end
