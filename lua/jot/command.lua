@@ -1,4 +1,5 @@
 local util = require "jot.util"
+local Note = require "jot.note"
 
 -- Search command for notes
 -- - ignore configuration files
@@ -30,12 +31,16 @@ local goto_file = function(state)
   local line_text = util.get_line()
   local _, cursor_position = unpack(vim.api.nvim_win_get_cursor(0))
 
-  local note_link = util.parse_note_jump(line_text, cursor_position)
+  local jump_note = util.parse_note_jump(state, line_text, cursor_position)
   
-  print(line_text)
-  print(cursor_position)
-  print(string.sub(line_text, cursor_position, cursor_position + 10))
-  
+  if jump_note == nil then
+    return nil
+  end
+
+  print(jump_note.path)
+
+  -- Open the note in a new buffer
+  Note.open(jump_note)
 end
 
 
@@ -43,7 +48,7 @@ local commands = {
   JotCheck = { func = health_check },
   JotOpenNote = { func = open_note },
   JotList = { func = search_files },
-  JotGotoFile = { func = goto_file },
+  JotJump = { func = goto_file },
 }
 
 -- Register all commands with jot

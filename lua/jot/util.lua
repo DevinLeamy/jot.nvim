@@ -80,6 +80,11 @@ util.get_links = function(line)
   local links = {}
   local rest_of_line = line
 
+  -- We continuously remove matching patterns from the start
+  -- of the string. The helps track the indices of patterns 
+  -- in the initial string
+  local start_buffer = 0
+
   while true do
     local left_bound, right_bound = get_link(rest_of_line)
 
@@ -87,13 +92,16 @@ util.get_links = function(line)
       break
     end
 
-    local link_text = text:sub(left_bound + 2, right_bound + 2)
-    local link = Link.new(left_bound, right_bound, link_text, link_text) 
+    local link_text = rest_of_line:sub(left_bound + 2, right_bound - 2)
+    local link = Link.new(start_buffer + left_bound, start_buffer + right_bound, link_text, link_text) 
 
     table.insert(links, link)
 
     rest_of_line = rest_of_line:sub(right_bound)
+    start_buffer = right_bound - 1
   end
+
+  return links
 end
 
 -- Find the note link locationed at a given cursor position
@@ -106,13 +114,15 @@ end
 --
 -- @param text string
 -- @param cursor_pos integer
--- @return string
-util.parse_note_jump = function(text, cursor_pos)
+-- @return jot.Note 
+util.parse_note_jump = function(state, text, cursor_pos)
   local function get_link_under_cursor()
     local links_on_line = util.get_links(text)
 
     for i = 1, #links_on_line do
       local link = links_on_line[i]
+
+      print("Link text: " .. link.text)
 
       if link.left_bound <= cursor_pos and cursor_pos < link.right_bound then
         return link
@@ -122,6 +132,25 @@ util.parse_note_jump = function(text, cursor_pos)
     return nil
   end
 
+  local function get_note_with_link(link)
+    -- Find the note with the given name
+    -- TODO: improve such that we aren't searching 
+    -- over all notes
+    local notes = util.collect_notes(state.directories)
+
+    print(link.link)
+
+    for i = 1, #notes do
+      local note = notes[i]
+
+      if note.file_name == link.link then
+        return note
+      end
+    end  
+
+    return nil 
+  end
+
   local link_under_cursor = get_link_under_cursor()
 
   if link_under_cursor == nil then
@@ -129,7 +158,8 @@ util.parse_note_jump = function(text, cursor_pos)
     return nil
   end
 
-  -- Find the note with the given name
+  return get_note_with_link(link_under_cursor)
+  
 end
 
 -- Get the text on the current line

@@ -16,5 +16,4 @@ jot_link.new = function(left_bound, right_bound, text, link )
   return self
 end
 
-
 return jot_link
