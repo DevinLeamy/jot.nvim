@@ -10,7 +10,8 @@ function State:new(options)
   local new_state = {}
 
   new_state.directories = {
-    "~/Desktop/test_vault"
+    "~/Desktop/test_vault",
+    "/Users/Devin/.local/obsidian/dl/neovim",
   }
 
   self.__index = self

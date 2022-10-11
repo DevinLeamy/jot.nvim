@@ -32,7 +32,8 @@ end
 
 -- Open the given note in a buffer
 note.open = function(note)
-  -- Save the current note 
+  -- Save the current note and open the new note
+  -- Note: redraw! 
   pcall(vim.api.nvim_command, "w!")
   vim.api.nvim_command("e " .. tostring(note.path) .. " | redraw!")
 end
