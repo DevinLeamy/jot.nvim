@@ -59,8 +59,6 @@ end
 -- @field directories Array<string> | absolute path of note directories 
 -- @field display_completions boolean | enable completions
 jot.setup = function(options)
-  print("Setup jot")
-
   local state = State:new(options)
 
   require("jot.command").register_all(state)

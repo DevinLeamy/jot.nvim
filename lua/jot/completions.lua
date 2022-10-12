@@ -41,9 +41,6 @@ source.complete = function(self, request, callback)
     return callback({})
   end
 
-  print("Input: " .. link_segment) 
-
-  print(self.state.directories[1]) 
   local notes = util.collect_notes(self.state.directories)
 
   local completions = {}

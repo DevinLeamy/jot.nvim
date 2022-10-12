@@ -13,10 +13,6 @@ local health_check = function(state)
     print("Jot is healthy")
 end
 
-local open_note = function(state)
-  print("Open note")
-end
-
 local search_files = function(state)
   local notes = util.collect_notes(state.directories)
 
@@ -46,15 +42,12 @@ end
 
 local commands = {
   JotCheck = { func = health_check },
-  JotOpenNote = { func = open_note },
   JotList = { func = search_files },
   JotJump = { func = goto_file },
 }
 
 -- Register all commands with jot
 local register_all = function(state)
-  print("Register commands")
-
   -- Bind the setup state to the commands 
   for command_name, command_config in pairs(commands) do
     local stateful_func = function(args)

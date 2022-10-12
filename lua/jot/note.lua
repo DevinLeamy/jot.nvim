@@ -21,10 +21,8 @@ note.from_path = function(path)
 
   -- filename.md
   local file_stem = path_split[#path_split]
-
   -- filename
   local file_name = util.split(file_stem, ".")[1]
-
   self.file_name = file_name
   
   return self

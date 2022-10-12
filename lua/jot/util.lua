@@ -122,8 +122,6 @@ util.parse_note_jump = function(state, text, cursor_pos)
     for i = 1, #links_on_line do
       local link = links_on_line[i]
 
-      print("Link text: " .. link.text)
-
       if link.left_bound <= cursor_pos and cursor_pos < link.right_bound then
         return link
       end
@@ -137,8 +135,6 @@ util.parse_note_jump = function(state, text, cursor_pos)
     -- TODO: improve such that we aren't searching 
     -- over all notes
     local notes = util.collect_notes(state.directories)
-
-    print(link.link)
 
     for i = 1, #notes do
       local note = notes[i]
