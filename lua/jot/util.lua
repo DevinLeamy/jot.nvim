@@ -171,35 +171,3 @@ util.get_line = function()
 end
 
 return util 
-
--- function get_link(text) 
---   l, r = text:find("%[%[[^%]]+%]%]")
---
---   return l, r
--- end
---
--- function get_links(text)
---   l, r = get_link
---
---   links = {}
---
---   while true do
---     l, r = get_link(text)
---     if l == nil then
---       break
---     end
---
---     link = text:sub(l, r)
---     table.insert(links, link)
---
---     text = text:sub(r)
---   end
---
---   return links
--- end
---
--- links = get_links(text)
---
--- for i = 1, #links do
---   print(links[i])
--- end

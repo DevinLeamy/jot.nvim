@@ -10,12 +10,9 @@ local State = {}
 function State:new(options)
   local new_state = {}
 
-  new_state.directories = {
-    "~/Desktop/test_vault",
-    "/Users/Devin/.local/obsidian/dl/neovim",
-  }
-
+  new_state.directories = options.directories or {}
   new_state.display_completions = true
+
   if options.display_completions == false then
     new_state.display_completions = false 
   end
@@ -40,6 +37,7 @@ jot.setup_completions = function(state)
 
 
   -- Add cmp_jot.lua to the list of sources
+  -- TODO: simplify this code (just insert/replace "jot" source)
   local sources = {
     { name = "jot" }
   }
@@ -56,6 +54,10 @@ end
 -- Set configuration options
 --
 -- @param options jot.Config
+--
+-- jot.Config
+-- @field directories Array<string> | absolute path of note directories 
+-- @field display_completions boolean | enable completions
 jot.setup = function(options)
   print("Setup jot")
 
@@ -66,16 +68,4 @@ jot.setup = function(options)
   jot.setup_completions(state)
 end
 
--- jot.Config
--- @field directories Array<string> | absolute path of note directories 
--- @field display_completions boolean | enable completions
-
 return jot
-
---[[
-  Example configuration.
-
-  require("jot").setup({
-    vault_path=/Users/Devin/.local/obsidian/dl
-  })
---]]
