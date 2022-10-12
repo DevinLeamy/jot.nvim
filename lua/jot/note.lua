@@ -43,6 +43,9 @@ end
 
 -- Creates and opens a new note. Returns
 -- the note that was created
+--
+-- @param name string | name of the note (without an extension)
+-- @param path string | absolute path to the new note (with an extension)
 note.create = function(name, path)
   local new_note = note.new(name, path)    
   note.open(new_note)

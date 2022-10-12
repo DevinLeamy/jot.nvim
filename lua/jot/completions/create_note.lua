@@ -21,21 +21,28 @@ create_note_source.complete = function(self, request, callback)
   local link_segment = Completion.get_link_segment(request.context.cursor_before_line) 
 
   if link_segment == nil then
-    return callback({})
+    return callback {}
   end
 
   local completions = {}
 
   -- Trim the front "[[" off of the link segment
-  local note_name = string.sub(link_segment, 1, #link_segment - 2)
+  local note_name = string.sub(link_segment, 3, #link_segment)
+
+  if 0 == #note_name then 
+    return callback {}
+  end
+
   local current_directory = vim.fn.expand('%:h')
 
   -- TODO: check if a note with the given name exists in the current directory.
+  -- BUG: Once you accept a completion, completions stop showing up
 
   -- If there does not exist a note with a name matching the 
   -- input text, provide a completion to create it.
   table.insert(completions, {
     label = "Create new note: " .. note_name,
+    -- sortText = "[[" .. note_name,
     textEdit = {
       newText = "[[" .. note_name .. "]]",
       insert = {
@@ -57,7 +64,10 @@ create_note_source.complete = function(self, request, callback)
     }
   })
 
-  return callback(completions)
+  return callback({
+    items = completions,
+    isIncomplete = true,
+  })
 end
 
 -- Create a new note when the completion is executed
@@ -67,9 +77,9 @@ create_note_source.execute = function(self, completion_item, callback)
   local note_directory = data.directory
   local note_path = note_directory .. "/" .. note_name
   
-  Note.create(note_name, "~/Desktop/test_vault/" .. note_name)
+  Note.create(note_name, note_directory .. "/" .. note_name .. ".md")
 
-  return callback
+  return callback({ isIncomplete = false })
 end
 
 
