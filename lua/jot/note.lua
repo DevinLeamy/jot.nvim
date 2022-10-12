@@ -2,8 +2,8 @@ local util = require "jot.util"
 
 -- jot.Note 
 --
--- @field path string
--- @field file_name string
+-- @field path string | absolute path to the note (including the file name)
+-- @field file_name string | name of the note (without an extension)
 local note = {}
 
 -- Constructor

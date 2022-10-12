@@ -33,7 +33,7 @@ find_note_source.complete = function(self, request, callback)
     local note = notes[i]
 
     table.insert(completions, {
-      label = note.file_name,
+      label = note.path,
       -- Behavior when completion is accepted
       --
       -- Inserts link "[[<link text>]]" and 

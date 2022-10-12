@@ -28,10 +28,12 @@ create_note_source.complete = function(self, request, callback)
 
   -- Trim the front "[[" off of the link segment
   local note_name = string.sub(link_segment, 1, #link_segment - 2)
+  local current_directory = vim.fn.expand('%:h')
+
+  -- TODO: check if a note with the given name exists in the current directory.
 
   -- If there does not exist a note with a name matching the 
   -- input text, provide a completion to create it.
-  
   table.insert(completions, {
     label = "Create new note: " .. note_name,
     textEdit = {
@@ -51,7 +53,7 @@ create_note_source.complete = function(self, request, callback)
     },
     data = {
       note_name = note_name,
-      -- TODO: Add path to the current note (where the new note will be added)
+      directory = current_directory,
     }
   })
 
@@ -62,8 +64,10 @@ end
 create_note_source.execute = function(self, completion_item, callback)
   local data = completion_item.data
   local note_name = data.note_name
+  local note_directory = data.directory
+  local note_path = note_directory .. "/" .. note_name
   
-  Note.create(note_name, "~/Desktop/test_vault")
+  Note.create(note_name, "~/Desktop/test_vault/" .. note_name)
 
   return callback
 end
