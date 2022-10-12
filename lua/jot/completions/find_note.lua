@@ -1,43 +1,27 @@
+-- nvim-cmp source to provide completions for note names
+
 local util = require "jot.util"
+local Completion = require "jot.completions.completion"
 
-local source = {}
+local find_note_source = {}
 
--- Initializes a new nvim-cmp source, with 
+-- Initializes a new nvim-cmp find_note_source with 
 -- a the given state
-source.new = function(state)
-  source.state = state
-  return setmetatable({}, { __index = source })
+find_note_source.new = function(state)
+  find_note_source.state = state
+  return setmetatable({}, { __index = find_note_source })
 end
 
-source.get_trigger_characters = function() 
+find_note_source.get_trigger_characters = function() 
   return { "[" }
 end
 
 -- nvim-cmp hook; runs whenever the a trigger character 
 -- (defined above) is input.
-source.complete = function(self, request, callback)
-  -- Retrieves the link that is being typed, as a string. 
-  -- Returns nil in no valid link start is found
-  -- 
-  --
-  -- eg: "[[li" for some line "insert [[li"
-  --                                  |||| 
-  --                 link being typed ^^^^      
-  local function get_link_segment(input)
-    for i = string.len(input), 1, -1 do
-      local substr = string.sub(input, i)
-      if vim.endswith(substr, "]") then
-        return nil
-      elseif vim.startswith(substr, "[[") then
-        return substr
-      end
-    end
-    return nil
-  end
+find_note_source.complete = function(self, request, callback)
+  local link_segment = Completion.get_link_segment(request.context.cursor_before_line)
 
-  local link_segment = get_link_segment(request.context.cursor_before_line)
-
-  if link_segment  == nil or not vim.startswith(link_segment, "[[") then
+  if link_segment  == nil then 
     return callback({})
   end
 
@@ -76,4 +60,4 @@ source.complete = function(self, request, callback)
   return callback(completions)
 end
 
-return source
+return find_note_source 

@@ -1,5 +1,6 @@
 local Path = require "plenary.path"
-local Completions = require "jot.completions"
+local FindNoteSource = require "jot.completions.find_note"
+local CreateNoteSource = require "jot.completions.create_note"
 
 local jot = {}
 jot.VERSION = "0.1"
@@ -33,17 +34,19 @@ jot.setup_completions = function(state)
     return
   end
 
-  cmp.register_source('jot', Completions.new(state))
+  cmp.register_source('jot_find_note', FindNoteSource.new(state))
+  cmp.register_source('jot_create_note', CreateNoteSource.new(state))
 
 
   -- Add cmp_jot.lua to the list of sources
   -- TODO: simplify this code (just insert/replace "jot" source)
   local sources = {
-    { name = "jot" }
+    { name = "jot_find_note" },
+    { name = "jot_create_note" },
   }
 
   for _, source in pairs(cmp.get_config().sources) do
-    if source.name ~= "jot" then
+    if source.name ~= "jot_find_note" and source.name ~= "jot_create_note" then
       table.insert(sources, source)
     end
   end
