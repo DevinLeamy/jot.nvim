@@ -14,10 +14,10 @@ require("jot").setup({
 ```
 
 ### Commands
-```lua
-:JotJump      -- Jump to the note under your cursor
-(TODO) :JotJumpForce -- Same as :JotJump, but creates the note if it doesn't exist
-(TODO) :JotInbound   -- List notes that link to the current note
+```bash
+:JotJump                  # Jump to the note under your cursor
+:JotJump --force (-f)     # Same as :JotJump, but creates the note if it doesn't exist
+:JotList                  # List all accessible notes
 ```
 
 
