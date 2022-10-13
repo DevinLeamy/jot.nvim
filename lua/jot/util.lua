@@ -23,7 +23,6 @@ util.split = function(s, divider)
   for token in string.gmatch(s, "([^"..divider.."]+)") do
     table.insert(tokens, token)
   end
-
   return tokens
 end
 
@@ -114,7 +113,7 @@ end
 --
 -- @param text string
 -- @param cursor_pos integer
--- @return jot.Note 
+-- @return jot.Link
 util.parse_note_jump = function(state, text, cursor_pos)
   local function get_link_under_cursor()
     local links_on_line = util.get_links(text)
@@ -122,7 +121,7 @@ util.parse_note_jump = function(state, text, cursor_pos)
     for i = 1, #links_on_line do
       local link = links_on_line[i]
 
-      if link.left_bound <= cursor_pos and cursor_pos < link.right_bound then
+      if link.left_bound <= cursor_pos + 1 and cursor_pos < link.right_bound then
         return link
       end
     end
@@ -130,32 +129,29 @@ util.parse_note_jump = function(state, text, cursor_pos)
     return nil
   end
 
-  local function get_note_with_link(link)
-    -- Find the note with the given name
-    -- TODO: improve such that we aren't searching 
-    -- over all notes
-    local notes = util.collect_notes(state.directories)
+  return get_link_under_cursor()
+end
 
-    for i = 1, #notes do
-      local note = notes[i]
+-- Attempts to find the note associated with the given
+-- link. Returns null if none is found
+--
+-- @param state jot.State
+-- @param link jot.Link
+util.get_note_with_link = function(state, link)
+  -- Find the note with the given name
+  -- TODO: improve such that we aren't searching 
+  -- over all notes
+  local notes = util.collect_notes(state.directories)
 
-      if note.file_name == link.link then
-        return note
-      end
-    end  
+  for i = 1, #notes do
+    local note = notes[i]
 
-    return nil 
-  end
+    if note.file_name == link.link then
+      return note
+    end
+  end  
 
-  local link_under_cursor = get_link_under_cursor()
-
-  if link_under_cursor == nil then
-    -- Do nothing
-    return nil
-  end
-
-  return get_note_with_link(link_under_cursor)
-  
+  return nil 
 end
 
 -- Get the text on the current line
