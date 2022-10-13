@@ -1,5 +1,20 @@
 # jot.nvim: Seemless navigation between notes
 
+### Disclaimer
+This extension is very much a work in progress. Things will break!
+
+### Installation
+Add `https://github.com/DevinLeamy/jot.nvim.git` to [vim-plug](https://github.com/junegunn/vim-plug), [packer](https://github.com/wbthomason/packer.nvim), or any other `nvim` package manager.
+
+```lua
+-- ex: packer
+require('packer').startup(function(use)
+ -- ...
+ use 'https://github.com/DevinLeamy/jot.nvim.git'
+ -- ...
+end)
+```
+
 ### Example configuration
 ```lua
 require("jot").setup({
