@@ -32,8 +32,12 @@ find_note_source.complete = function(self, request, callback)
   for i = 1, #notes do
     local note = notes[i]
 
+    local path_split = util.split(note.path, "/")
+    local top_directory = path_split[#path_split - 1]
+    local file_stem = path_split[#path_split]
+
     table.insert(completions, {
-      label = note.path,
+      label = top_directory .. "/" .. file_stem, 
       -- Behavior when completion is accepted
       --
       -- Inserts link "[[<link text>]]" and 
