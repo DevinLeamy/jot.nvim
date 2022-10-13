@@ -21,7 +21,7 @@ create_note_source.complete = function(self, request, callback)
   local link_segment = Completion.get_link_segment(request.context.cursor_before_line) 
 
   if link_segment == nil then
-    return callback {}
+    return callback { isIncomplete = false }
   end
 
   local completions = {}
@@ -73,11 +73,13 @@ end
 -- Create a new note when the completion is executed
 create_note_source.execute = function(self, completion_item, callback)
   local data = completion_item.data
-  local note_name = data.note_name
-  local note_directory = data.directory
-  local note_path = note_directory .. "/" .. note_name
+  local name = data.note_name
+  local directory = data.directory
   
-  Note.create(note_name, note_directory .. "/" .. note_name .. ".md")
+  local note = Note.from_dir_and_name(directory, name)
+  Note.open(note)
+
+  completion_item.isIncomplete = false
 
   return callback({ isIncomplete = false })
 end
