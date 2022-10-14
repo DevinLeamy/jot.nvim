@@ -1,7 +1,7 @@
 # jot.nvim: Seemless navigation between notes
 
 ### Disclaimer
-This extension is very much a work in progress. Things will break!
+This extension is very much a work in progress. Be wary of breaking updates!
 
 ### Installation
 Add `https://github.com/DevinLeamy/jot.nvim.git` to [vim-plug](https://github.com/junegunn/vim-plug), [packer](https://github.com/wbthomason/packer.nvim), or any other `nvim` package manager.
@@ -35,7 +35,7 @@ require("jot").setup({
 :JotList                  # List all accessible notes
 ```
 
-
+<!--
 ### TODO
 - [ ] Make completions lazily load
 - [ ] Add support for `[[<text>|<link>]]` notes
@@ -45,4 +45,4 @@ require("jot").setup({
 - [ ] Add go to next note jump
 - [ ] Default to including all directories in `jot` config
 
-
+-->
