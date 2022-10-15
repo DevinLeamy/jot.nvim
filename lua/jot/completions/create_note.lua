@@ -28,8 +28,9 @@ create_note_source.complete = function(self, request, callback)
 
   -- Trim the front "[[" off of the link segment
   local note_name = string.sub(link_segment, 3, #link_segment)
-
-  if 0 == #note_name then 
+  
+  -- Empty names or names containing "]" are not permitted
+  if 0 == #note_name or note_name:find("%]") ~= nil then 
     return callback {}
   end
 
