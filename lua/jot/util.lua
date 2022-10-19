@@ -71,9 +71,30 @@ end
 --@return Array<jot.Link>
 util.get_links = function(line)
   -- Find the bounds of the next substring matching the 
-  -- pattern: [[<text]]
-  local function get_link(text) 
+  -- pattern: [[<link>|<text>]] or [[<link>]]
+  --          |               |    |        |
+  --          L               R    L        R
+  local function get_link_bounds(text) 
     return text:find("%[%[[^%]]+%]%]")
+  end
+
+  -- Returns the <link> and <text> of a raw link of the 
+  -- form [[<link>|<text>]] or [[<link>]].
+  --
+  -- e.g. [[my_link|Awesome Link]] -> "my_link", "Awesome Link"  
+  --      [[my_link]]              -> "my_link", "my_link"
+  --
+  -- @param link string 
+  -- @return string, string | <link>, <text>
+  local function parse_link(link) 
+    local link_text = link:sub(3, #link - 2)
+
+    if link_text:find("|") then
+      local tokens = util.split(link_text, "|")
+      return tokens[1], tokens[2]
+    else 
+      return link_text, link_text
+    end
   end
 
   local links = {}
@@ -85,14 +106,15 @@ util.get_links = function(line)
   local start_buffer = 0
 
   while true do
-    local left_bound, right_bound = get_link(rest_of_line)
+    local left_bound, right_bound = get_link_bounds(rest_of_line)
 
     if left_bound == nil then
       break
     end
 
-    local link_text = rest_of_line:sub(left_bound + 2, right_bound - 2)
-    local link = Link.new(start_buffer + left_bound, start_buffer + right_bound, link_text, link_text) 
+    local link_string = rest_of_line:sub(left_bound, right_bound)
+    local linked_note, link_text = parse_link(link_string)
+    local link = Link.new(start_buffer + left_bound, start_buffer + right_bound, link_text, linked_note) 
 
     table.insert(links, link)
 
@@ -107,7 +129,7 @@ end
 -- in the given line of text, or return nil if none is found
 --
 -- ex: [[<link>]]        -> link 
---     [[<text>|<link>]] -> link
+--     [[<link>|<text>]] -> link
 --
 -- Note: Assumes names do not contain "[", "]", or "|"
 --
