@@ -46,7 +46,7 @@ local goto_file = function(state, data)
     -- Create a note with the given name inside of the current 
     -- directory
     local current_directory = vim.fn.expand('%:h')
-    local note_name = link_under_cursor.text
+    local note_name = link_under_cursor.link
 
     linked_note = Note.from_dir_and_name(current_directory, note_name)
   end
