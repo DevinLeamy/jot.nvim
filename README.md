@@ -1,9 +1,35 @@
-# jot.nvim: Seemless navigation between notes
+# *jot.nvim*
 
-### Disclaimer
-This extension is very much a work in progress. Be wary of breaking updates!
+<p>
+  <a href="#commands">Commands</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#configuration">Configuration</a>
+</p>
 
-### Installation
+***jot.nvim*** is a CLI tool for quickly navigating between markdown notes in neovim. `jot.nvim` recognizes links
+of the form `[[note-name]]` and `[[note-name|link text]]` and provides completions and syntax highlighting to make 
+links easier to read and write. 
+
+## Usage
+
+#### Navigating between notes
+When your cursor is within the bounds of a link of the form `[[note-name]]` or `[[note-name|link text]]`, you can navigate to that note by envoking the `:JotJump` command. 
+
+#### Creating notes
+If the note does not already exist, use `:JotJump --force` instead to create the note in the active buffer's directory and navigate to it.
+
+## Commands
+```bash
+:JotJump                # Jump to note
+:JotJump --force (-f)   # Jump to note, and create note if it does not exist
+:JotList                # List all accessible notes
+```
+
+
+
+
+## Installation
 Add `https://github.com/DevinLeamy/jot.nvim.git` to [vim-plug](https://github.com/junegunn/vim-plug), [packer](https://github.com/wbthomason/packer.nvim), or any other `nvim` package manager.
 
 ```lua
@@ -15,25 +41,25 @@ require('packer').startup(function(use)
 end)
 ```
 
-### Example configuration
+## Configuration
 ```lua
 require("jot").setup({
     -- Directories to query for notes
     directories = {
       "~/vaults/daily_notes",
-      "/Users/John/project_notes"
+      "~/projects",
     },
     -- Enable completions
     display_completions = true,
 })
 ```
-
-### Commands
-```bash
-:JotJump                  # Jump to the note under your cursor
-:JotJump --force (-f)     # Same as :JotJump, but creates the note if it doesn't exist
-:JotList                  # List all accessible notes
+```vim
+" ex: bindings
+nnoremap <Leader>f :JotJump<CR>
+nnoremap <Leader>F :JotJump --force<CR>
 ```
+
+
 
 <!--
 ### TODO
@@ -44,5 +70,4 @@ require("jot").setup({
 - [ ] Add display for backlinks to the current note
 - [ ] Add go to next note jump
 - [ ] Default to including all directories in `jot` config
-
 -->
